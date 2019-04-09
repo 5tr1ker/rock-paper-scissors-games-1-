@@ -4,18 +4,20 @@
 #include <time.h>
 
 int choice;					 // 사용자 선택 값
-int rock_t, scis_t, paper_t = 1; // total
-int rock_w, scis_w, paper_w = 1; // win rate
+float rock_t, scis_t, paper_t; // total
+float rock_w, scis_w, paper_w; // win rate
 int ran, player;             // 컴퓨터가 낸 값, 플레이어가 선택한 값
 void ran_games_values();     // 컴퓨터가 낸 값을 랜덤으로 산출
 void game_result(int x);     // 게임 결과
 void games_();				 // 게임.
 void checking_winning_rate(); //승률 확인
 void statis();				  //통계
-rock_t = 1;
-rock_w = 1;
-scis_t = 1;
-scis_w = 1;
+rock_t = 1.0;
+rock_w = 1.0;
+scis_t = 1.0;
+scis_w = 1.0;
+paper_t = 1.0;
+paper_w = 1.0;
 int main()
 {
 	while (1)
@@ -118,17 +120,27 @@ void game_result(int x)
 
 void checking_winning_rate()
 {
+	printf("\n");
 	puts("your winning rate");
-	printf("1 . Rock_winning_rate : %d%%\n", (rock_w / rock_t)*100);
-	printf("2 . scissors_winning_rate : %d%%\n", (scis_w / scis_t)*100);
-	printf("3 . paper_winning_rate : %d%%\n", (paper_w / paper_t) * 100);
+	if (rock_t != 1)
+		printf("1 . Rock_winning_rate : %3.2f%%\n", ((rock_w - 1) / (rock_t - 1)) * 100);
+	else
+		printf("1. 1 . Rock_winning_rate : 100.00%%\n");
+	if (scis_t != 1)
+		printf("2 . scissors_winning_rate : %3.2f%%\n", ((scis_w - 1) / (scis_t - 1)) * 100);
+	else
+		printf("2.scissors_winning_rate : 100.00%%\n");
+	if (paper_t != 1)
+		printf("3 . paper_winning_rate : %3.2f%%\n", ((paper_w - 1) / (paper_t - 1)) * 100);
+	else
+		printf("3 . paper_winning_rate : 100.00%%\n");
 	getch();
 }
 
 void statis()
 {
 	puts("total statis");
-	printf("1 . Rock = *total = %d games / %d wins / %d defeat\n", rock_t-1 , rock_w-1 , rock_t - rock_w);
-	printf("2 . Scissors = *total = %d games / %d wins / %d defeat\n", scis_t-1 , scis_w-1 , scis_t - scis_w);
-	printf("3 . Papers = *total = %d games / %d wins / %d defeat\n", paper_t-1 , paper_w-1 , paper_t - paper_w);
+	printf("1 . Rock = *total = %1.0f games / %1.0f wins / %1.0f defeat\n", rock_t-1 , rock_w-1 , rock_t - rock_w);
+	printf("2 . Scissors = *total = %1.0f games / %1.0f wins / %1.0f defeat\n", scis_t-1 , scis_w-1 , scis_t - scis_w);
+	printf("3 . Papers = *total = %1.0f games / %1.0f wins / %1.0f defeat\n", paper_t-1 , paper_w-1 , paper_t - paper_w);
 }
