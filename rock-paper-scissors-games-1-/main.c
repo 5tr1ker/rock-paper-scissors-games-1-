@@ -16,6 +16,10 @@ void how_to_play();           //헬프
 int coin = 20;					//코인값
 int coin2 = 0;						//베팅 값
 int MAX_coin = 20;                //코인 최댓값
+int com, pla = 0;                  //3선승제 계산
+void result_();                    // 포인트 합산
+int i;                             // 게임수
+com = 0;
 rock_t = 1.0;
 rock_w = 1.0;
 scis_t = 1.0;
@@ -61,24 +65,37 @@ int main()
 		if (choice == 5)
 			break;
 	}
+
 }
 
 void games_()			 // 표시까지 함수 games_ 범위
 {
-	srand(time(NULL));
-	ran_games_values();
+	com = 0;
+	pla = 0;
 	printf("베팅하실 코인을 입력해주세요 승리시 2배 , 패배시 코인을 잃습니다==");
 	scanf("%d", &coin2);
 	coin -= coin2;
-	printf("컴퓨터가 무작위로 선택합니다... \n\n 0. 가위 1. 바위 2. 보 \n");
-	printf("플레이어가 낼 수를 입력해주세요... \n 범위 외의 값은 재입력을 요구합니다.:");
-
-	do
+	for (i = 0; i < 3 && com < 2 && pla < 2 ; i++)
 	{
-		scanf("%d", &player);
+		printf("[%d 번째 게임 컴퓨터 %d승 || 사용자 %d승 (2선승)\n" , i+1 , com , pla);
+		printf("컴퓨터가 무작위로 선택합니다...      0. 가위 1. 바위 2. 보 \n\n");
+		srand(time(NULL));
+		ran_games_values();
+		printf("플레이어가 낼 수를 입력해주세요... \n 범위 외의 값은 재입력을 요구합니다.:");
+
+		do
+		{
+			scanf("%d", &player);
+		} while (player < 0 || player > 2);
+		game_result(player);
+		result_();
 	}
-	while (player < 0 || player > 2);
-	game_result(player);
+	if (coin <= 0)
+	{
+		printf("남은 코인을 전부 잃어 프로그램을 종료합니다\n");
+		getch();
+		exit(1);
+	}
 }
 
 void ran_games_values()
@@ -104,8 +121,7 @@ void game_result(int x)
 		}
 
 		printf("플레이어가 패배했습니다...\n");
-		printf("베팅하신 %d 코인은 전부 잃습니다\n\n", coin2);
-		coin2 = 0;
+		com++;
 	}
 	else if ((x == 0 && ran == 2) || (x == 1 && ran == 0) || (x == 2 && ran == 1))
 	{
@@ -127,24 +143,13 @@ void game_result(int x)
 		}
 
 		printf("플레이어가 이겼습니다...\n");
-		printf("코인 %d 를 두배로 돌려받습니다\n\n" , coin2);
-		coin += (coin2 * 2);
+		pla++;
 	}
 	else if (x == ran)
 	{
 		printf("비겼습니다...\n");
-		printf("베팅하신 %d 코인은 돌려받습니다.\n\n", coin2);
-		coin += coin2;
+		i--;
 	}
-
-	if (coin <= 0)
-	{
-		printf("남은 코인을 전부 잃어 프로그램을 종료합니다\n");
-		getch();
-		exit(1);
-	}
-	if (MAX_coin < coin)
-		MAX_coin = coin;
 }								// 함수 game_ 종료
 
 void checking_winning_rate()
@@ -181,4 +186,20 @@ void how_to_play()
 	printf("코인은 베팅할수도있고 , 안할수도 있습니다.\n");
 	printf("코인이 0이되면 게임은 종료가 됩니다.\n");
 	printf("프로그램은 , 저장 , 불러오기 기능이 있습니다.\n");
+}
+
+void result_()
+{
+	if (com == 2)
+	{
+		printf("플레이어의 패배로 , 베팅하신 %d 코인은 전부 잃습니다\n\n", coin2);
+		coin2 = 0;
+	}
+	else if (pla == 2)
+	{
+		printf("플레이어의 승리로 , 코인 %d 를 두배로 돌려받습니다\n\n", coin2);
+		coin += (coin2 * 2);
+	}
+	if (MAX_coin < coin)
+		MAX_coin = coin;
 }
