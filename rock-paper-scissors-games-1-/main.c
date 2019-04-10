@@ -12,6 +12,10 @@ void game_result(int x);     // 게임 결과
 void games_();				 // 게임.
 void checking_winning_rate(); //승률 확인
 void statis();				  //통계
+void how_to_play();           //헬프
+int coin = 20;					//코인값
+int coin2 = 0;						//베팅 값
+int MAX_coin = 20;                //코인 최댓값
 rock_t = 1.0;
 rock_w = 1.0;
 scis_t = 1.0;
@@ -26,11 +30,14 @@ int main()
 		{
 			puts("+--------------------------------+");
 			puts("|  >rock-scissors-paper-games<   |");
+		    printf("|        You have :   %d COIN  \n" , coin);
+			printf("|     MAX_coin = %d             \n" , MAX_coin);
 			puts("+--------------------------------+");
 			puts(" 1 . games starts");
 			puts(" 2 . checking winning rate");
 			puts(" 3 . statistics");
-			puts(" 4 . exit");
+			puts(" 4 . how to play");
+			puts(" 5 . exit");
 			printf(" choice your decision :");
 			scanf("%d", &choice);
 		} while (choice < 1 || choice > 4);
@@ -48,6 +55,10 @@ int main()
 			statis();
 		}
 		if (choice == 4)
+		{
+			how_to_play();
+		}
+		if (choice == 5)
 			break;
 	}
 }
@@ -56,6 +67,9 @@ void games_()			 // 표시까지 함수 games_ 범위
 {
 	srand(time(NULL));
 	ran_games_values();
+	printf("베팅하실 코인을 입력해주세요 승리시 2배 , 패배시 코인을 잃습니다==");
+	scanf("%d", &coin2);
+	coin -= coin2;
 	printf("컴퓨터가 무작위로 선택합니다... \n\n 0. 가위 1. 바위 2. 보 \n");
 	printf("플레이어가 낼 수를 입력해주세요... \n 범위 외의 값은 재입력을 요구합니다.:");
 
@@ -90,6 +104,8 @@ void game_result(int x)
 		}
 
 		printf("플레이어가 패배했습니다...\n");
+		printf("베팅하신 %d 코인은 전부 잃습니다\n\n", coin2);
+		coin2 = 0;
 	}
 	else if ((x == 0 && ran == 2) || (x == 1 && ran == 0) || (x == 2 && ran == 1))
 	{
@@ -111,11 +127,24 @@ void game_result(int x)
 		}
 
 		printf("플레이어가 이겼습니다...\n");
+		printf("코인 %d 를 두배로 돌려받습니다\n\n" , coin2);
+		coin += (coin2 * 2);
 	}
 	else if (x == ran)
 	{
 		printf("비겼습니다...\n");
+		printf("베팅하신 %d 코인은 돌려받습니다.\n\n", coin2);
+		coin += coin2;
 	}
+
+	if (coin <= 0)
+	{
+		printf("남은 코인을 전부 잃어 프로그램을 종료합니다\n");
+		getch();
+		exit(1);
+	}
+	if (MAX_coin < coin)
+		MAX_coin = coin;
 }								// 함수 game_ 종료
 
 void checking_winning_rate()
@@ -143,4 +172,13 @@ void statis()
 	printf("1 . Rock = *total = %1.0f games / %1.0f wins / %1.0f defeat\n", rock_t-1 , rock_w-1 , rock_t - rock_w);
 	printf("2 . Scissors = *total = %1.0f games / %1.0f wins / %1.0f defeat\n", scis_t-1 , scis_w-1 , scis_t - scis_w);
 	printf("3 . Papers = *total = %1.0f games / %1.0f wins / %1.0f defeat\n", paper_t-1 , paper_w-1 , paper_t - paper_w);
+}
+
+void how_to_play()
+{
+	printf("+----------------------------------+\n");
+	printf("컴퓨터와 가위 바위 보를 진행하게됩니다.\n");
+	printf("코인은 베팅할수도있고 , 안할수도 있습니다.\n");
+	printf("코인이 0이되면 게임은 종료가 됩니다.\n");
+	printf("프로그램은 , 저장 , 불러오기 기능이 있습니다.\n");
 }
