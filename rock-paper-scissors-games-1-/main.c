@@ -19,6 +19,8 @@ int MAX_coin = 20;                //코인 최댓값
 int com, pla = 0;                  //3선승제 계산
 void result_();                    // 포인트 합산
 int i;                             // 게임수
+void Save_();						//세이브
+void Open_();					   //불러오기
 com = 0;
 rock_t = 1.0;
 rock_w = 1.0;
@@ -26,6 +28,9 @@ scis_t = 1.0;
 scis_w = 1.0;
 paper_t = 1.0;
 paper_w = 1.0;
+FILE *fp;
+char filename[20];
+char *mode;
 int main()
 {
 	while (1)
@@ -41,10 +46,12 @@ int main()
 			puts(" 2 . checking winning rate");
 			puts(" 3 . statistics");
 			puts(" 4 . how to play");
-			puts(" 5 . exit");
+			puts(" 5 . Save");
+			puts(" 6 . Open");
+			puts(" 7 . exit");
 			printf(" choice your decision :");
 			scanf("%d", &choice);
-		} while (choice < 1 || choice > 4);
+		} while (choice < 1 || choice > 7);
 
 		if (choice == 1)
 		{
@@ -62,18 +69,27 @@ int main()
 		{
 			how_to_play();
 		}
-		if (choice == 5)
-			break;
+		if (choice == 5) {
+			Save_();
+		}
+		if (choice == 6) {
+			Open_();
+		}
+		if (choice == 7)
+			exit(0);
 	}
 
 }
 
-void games_()			 // 표시까지 함수 games_ 범위
+// 표시까지 함수 games_ 범위
+void games_()
 {
 	com = 0;
 	pla = 0;
-	printf("베팅하실 코인을 입력해주세요 승리시 2배 , 패배시 코인을 잃습니다==");
-	scanf("%d", &coin2);
+	do {
+		printf("베팅하실 코인을 입력해주세요 승리시 2배 , 패배시 코인을 잃습니다==");
+		scanf("%d", &coin2);
+	} while (coin < coin2);
 	coin -= coin2;
 	for (i = 0; i < 3 && com < 2 && pla < 2 ; i++)
 	{
@@ -202,4 +218,41 @@ void result_()
 	}
 	if (MAX_coin < coin)
 		MAX_coin = coin;
+}
+
+void Save_()
+{
+	printf("\n저장할 이름을 입력해주세요 <최대20>\n");
+	puts("WARNING :: .txt 처럼 확장자를 입력하지않으면 오류가 납니다.");
+	printf("입력::");
+	scanf("%s", &filename);
+	mode = &"w";
+	if ((fp = fopen(filename, mode)) != NULL) {
+		fprintf(fp, "%d %f %f %f %f %f %f" , coin, rock_t, scis_t, paper_t, rock_w, scis_w, paper_w);
+		printf("\n%s == 이름의 파일을 저장했습니다\n", filename);
+		fclose(fp);
+	}
+	else
+	{
+		printf("저장실패!\n");
+	}
+}
+
+void Open_()
+{
+	char read;
+	printf("불러올 파일의 이름을 입력해주세요 <최대~20>\n");
+	printf("입력::");
+	scanf("%d", &filename);
+	mode = &"r";
+	if ((fp = fopen(filename, mode)) != NULL) {
+		while (fscanf(fp, "%d", filename) != EOF)
+			while (coin = (fscanf(fp, "%d", filename) != '\n'))
+			
+		printf("\n파일을 불러오는데 성공했습니다\n");
+		fclose(fp);
+	}
+	else {
+	printf("\n불러오기실패!");
+}
 }
