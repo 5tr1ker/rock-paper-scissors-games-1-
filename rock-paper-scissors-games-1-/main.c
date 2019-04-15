@@ -22,12 +22,12 @@ int i;                             // 게임수
 void Save_();						//세이브
 void Open_();					   //불러오기
 com = 0;
-rock_t = 1.0;
-rock_w = 1.0;
-scis_t = 1.0;
-scis_w = 1.0;
-paper_t = 1.0;
-paper_w = 1.0;
+float rock_t = 1.0;
+float rock_w = 1.0;
+float scis_t = 1.0;
+float scis_w = 1.0;
+float paper_t = 1.0;
+float paper_w = 1.0;
 FILE *fp;
 char filename[20];
 char *mode;
@@ -222,14 +222,9 @@ void result_()
 
 void Save_()
 {
-	printf("\n저장할 이름을 입력해주세요 <최대20>\n");
-	puts("WARNING :: .txt 처럼 확장자를 입력하지않으면 오류가 납니다.");
-	printf("입력::");
-	scanf("%s", &filename);
-	mode = &"w";
-	if ((fp = fopen(filename, mode)) != NULL) {
+	if ((fp = fopen("savefile.txt", "w")) != NULL) {
 		fprintf(fp, "%d %f %f %f %f %f %f" , coin, rock_t, scis_t, paper_t, rock_w, scis_w, paper_w);
-		printf("\n%s == 이름의 파일을 저장했습니다\n", filename);
+		printf("==파일을 저장했습니다==\n");
 		fclose(fp);
 	}
 	else
@@ -240,17 +235,11 @@ void Save_()
 
 void Open_()
 {
-	char read;
-	printf("불러올 파일의 이름을 입력해주세요 <최대~20>\n");
-	printf("입력::");
-	scanf("%d", &filename);
-	mode = &"r";
-	if ((fp = fopen(filename, mode)) != NULL) {
-		while (fscanf(fp, "%d", filename) != EOF)
-			while (coin = (fscanf(fp, "%d", filename) != '\n'))
-			
+	if ((fp = fopen("savefile.txt", "r")) != NULL) {
+		fscanf_s(fp, "%d %f %f %f %f %f %f", &coin, &rock_t, &scis_t, &paper_t, &rock_w, &scis_w, &paper_w);
 		printf("\n파일을 불러오는데 성공했습니다\n");
 		fclose(fp);
+		
 	}
 	else {
 	printf("\n불러오기실패!");
